@@ -9,6 +9,7 @@
 import UIKit
 
 
+// move view when keyboard will appear or disappear
 extension UIView {
     func bindToKeyboard(){
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(_:)), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)

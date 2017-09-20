@@ -8,28 +8,47 @@
 
 import UIKit
 
-class LoginVC: UIViewController {
 
+class LoginVC: UIViewController, UITextFieldDelegate {
+
+    @IBOutlet weak var emailTextField: InsetTextField!
+    @IBOutlet weak var passwordTextField: InsetTextField!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        emailTextField.delegate = self
+        passwordTextField.delegate = self
+        
+        dismissKeyboardGestureRecognizer()
+        
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    @IBAction func signInBtnPressed(_ sender: Any) {
+        if let email = emailTextField.text, let pass = passwordTextField.text {
+            AuthService.instance.loginUser(withEmail: email, andPassword: pass, loginComplete: { (success, error) in
+                if success {
+                    self.dismiss(animated: true, completion: nil)
+                } else {
+                    print(String(describing: error?.localizedDescription))
+                }
+                
+                AuthService.instance.registerUser(withEmail: email, andPassword: pass, userCreationComplete: { (success, regisrationError) in
+                    if success {
+                        AuthService.instance.loginUser(withEmail: email, andPassword: pass, loginComplete: { (success, nil) in
+                            self.dismiss(animated: true, completion: nil)
+                            print("Successfully registered user!")
+                        })
+                    } else {
+                        print(String(describing: error?.localizedDescription))
+                    }
+                })
+            })
+        }
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    @IBAction func closeBtnPressed(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
     }
-    */
-
+    
 }

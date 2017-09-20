@@ -10,15 +10,35 @@ import UIKit
 
 class UserCell: UITableViewCell {
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
+    @IBOutlet weak var profileImageView: UIImageView!
+    @IBOutlet weak var usernameLbl: UILabel!
+    @IBOutlet weak var checkImageView: UIImageView!
+    
+    var showing: Bool = false
+    
+    func configureCell(profileImage: UIImage, username: String, isSelected: Bool){
+        profileImageView.image = profileImage
+        usernameLbl.text = username
+        
+        if isSelected{
+            checkImageView.isHidden = false
+        } else {
+            checkImageView.isHidden = true
+        }
     }
-
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+        
+        if selected {
+            if !showing {
+                checkImageView.isHidden = false
+                showing = true
+            } else {
+                checkImageView.isHidden = true
+                showing = false
+            }
+        }
     }
 
 }
